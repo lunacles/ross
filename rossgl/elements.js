@@ -9,24 +9,20 @@ export const Element = class {
     this.webgl = Document.webgl
     this.gl = Document.webgl.gl
 
-    this.compile()
-    this.color = this.gl.getUniformLocation(this.webgl.program, 'u_color')
     this.opacity = 1
 
     this.count = 0
 
     this.cache = { type: null }
   }
-  async compile() {
-    this.webgl.setFragment(Fragments.fill)
-    this.webgl.setVertex(Vertexes.position)
-    
+  compile(fragment, vertex) {
+    this.webgl.setFragment(fragment)
+    this.webgl.setVertex(vertex)
     this.webgl.compileProgram()
   }
   finish() {
-    let primitiveType = this.gl.TRIANGLES
     let offset = 0
-    this.gl.drawArrays(primitiveType, offset, this.count)
+    this.gl.drawArrays(this.gl.TRIANGLE_FAN, offset, this.count)
   }
   convertColor(hex) {
     let [r, g, b] =  [(hex >> 16) & 0xFF, (hex >> 8) & 0xFF, hex & 0xFF]
@@ -53,16 +49,18 @@ export const Rect = class extends Element {
     this.width = width
     this.height = height
     this.x = x
-    this.y = Document.height - (y + this.height)
+    this.y = Document.height - y
 
     this.count = 6
 
+    this.compile(Fragments.rect, Vertexes.rect)
+    this.position = this.gl.getAttribLocation(this.webgl.program, 'a_position')
+    this.resolution = this.gl.getUniformLocation(this.webgl.program, 'u_resolution')
+    this.color = this.gl.getUniformLocation(this.webgl.program, 'u_color')
+
     this.draw()
   }
-  async draw() {
-    let positionAttributeLocation = this.gl.getAttribLocation(this.webgl.program, 'a_position')
-    let resolutionUniformLocation = this.gl.getUniformLocation(this.webgl.program, 'u_resolution')
-  
+  draw() {
     let positionBuffer = this.gl.createBuffer()
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, positionBuffer)
   
@@ -75,7 +73,7 @@ export const Rect = class extends Element {
       this.x, this.y + this.height,
     ]
     this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(positions), this.gl.STATIC_DRAW)
-    this.gl.enableVertexAttribArray(positionAttributeLocation)
+    this.gl.enableVertexAttribArray(this.position)
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, positionBuffer)
   
     let size = 2
@@ -83,9 +81,68 @@ export const Rect = class extends Element {
     let normalize = false
     let stride = 0
     let offset = 0
-    this.gl.vertexAttribPointer(positionAttributeLocation, size, type, normalize, stride, offset)
+    this.gl.vertexAttribPointer(this.position, size, type, normalize, stride, offset)
   
-    this.gl.uniform2f(resolutionUniformLocation, Document.webgl.width, Document.webgl.height)  
+    this.gl.uniform2f(this.resolution, Document.webgl.width, Document.webgl.height)  
     return this
   }
 }
+
+export const Circle = class extends Element {
+  static draw({ x = 0, y = 0, radius = 0 }) {
+    return new Circle(x, y, radius)
+  }
+  constructor(x, y, radius) {
+    super()
+
+    this.radius = radius
+    this.x = x
+    this.y = Document.height - y + this.radius
+
+    this.compile(Fragments.circle, Vertexes.circle)
+    this.position = this.gl.getAttribLocation(this.webgl.program, 'a_position')
+    this.resolution = this.gl.getUniformLocation(this.webgl.program, 'u_resolution')
+    this.center = this.gl.getUniformLocation(this.webgl.program, 'u_center')
+    this.color = this.gl.getUniformLocation(this.webgl.program, 'u_color')
+
+    this.draw()
+  }
+  draw() {
+    let positionBuffer = this.gl.createBuffer()
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, positionBuffer)
+
+    let positions = this.calculateCircleVertices()
+    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(positions), this.gl.STATIC_DRAW)
+
+    this.gl.enableVertexAttribArray(this.position)
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, positionBuffer)
+
+    let size = 2
+    let type = this.gl.FLOAT
+    let normalize = false
+    let stride = 0
+    let offset = 0
+    this.gl.vertexAttribPointer(this.position, size, type, normalize, stride, offset)
+
+
+    this.gl.uniform2f(this.center, this.x, this.y)
+    this.gl.uniform2f(this.resolution, Document.webgl.width, Document.webgl.height)  
+
+    this.count = positions.length / 2
+    return this
+  }
+
+  calculateCircleVertices() {
+    let positions = []
+    let segments = 360
+    for (let i = 0; i < segments; i++) {
+      let angle = (i / segments) * 2 * Math.PI
+      positions.push(
+        this.radius * Math.cos(angle),
+        this.radius * Math.sin(angle)
+      )
+    }
+    return positions
+  }
+}
+
