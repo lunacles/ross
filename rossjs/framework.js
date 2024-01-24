@@ -11,9 +11,11 @@ import {
   Poly,
   Clip,
 } from './elements.js'
+import ClickRegion from './components/clickregion.js'
 
 export {
   Document,
+
   Element,
   Rect,
   RoundRect,
@@ -24,4 +26,6 @@ export {
   Text,
   Poly,
   Clip,
+
+  ClickRegion,
 }
