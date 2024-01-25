@@ -40,5 +40,5 @@ canvas.addEventListener('mousemove', e => {
 })
 canvas.addEventListener('wheel', e => {
   e.preventDefault()
-  Interaction4.targetScroll -= Math.sign(e.deltaY) * 15
+  Interaction.targetScroll -= Math.sign(e.deltaY) * 15
 })
