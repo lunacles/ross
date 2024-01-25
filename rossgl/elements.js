@@ -25,6 +25,7 @@ export const Element = class {
     this.gl.drawArrays(this.gl.TRIANGLE_FAN, offset, this.count)
   }
   convertColor(hex) {
+    hex = parseInt(hex.replace('#', ''), 16)
     let [r, g, b] =  [(hex >> 16) & 0xFF, (hex >> 8) & 0xFF, hex & 0xFF]
     return [r / 255, g / 255, b / 255]
   }
