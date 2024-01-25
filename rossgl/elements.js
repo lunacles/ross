@@ -21,8 +21,7 @@ export const Element = class {
     this.webgl.compileProgram()
   }
   finish() {
-    let offset = 0
-    this.gl.drawArrays(this.gl.TRIANGLE_FAN, offset, this.count)
+    this.gl.drawArrays(this.gl.TRIANGLE_FAN, 0, this.count)
   }
   convertColor(hex) {
     hex = parseInt(hex.replace('#', ''), 16)
