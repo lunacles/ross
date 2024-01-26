@@ -8,8 +8,6 @@ const Interpolator = class {
     return new Array(size).fill(new Interpolator(0, speed, sharpness))
   }
   constructor(interpolation, speed, sharpness = 3) {
-    super()
-
     this.interpolation = interpolation
     this.speed = speed
     this.sharpness = sharpness
