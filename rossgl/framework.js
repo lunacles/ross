@@ -13,7 +13,9 @@ import {
   Element,
   Rect,
   Circle,
+  RoundRect,
 } from './elements.js'
+
 export {
   Document,
   Fragments,
@@ -21,4 +23,5 @@ export {
   Element,
   Rect,
   Circle,
+  RoundRect,
 }
