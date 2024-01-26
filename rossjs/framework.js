@@ -11,7 +11,12 @@ import {
   Poly,
   Clip,
 } from './elements.js'
-import ClickRegion from './components/clickregion.js'
+import {
+  ClickRegion,
+  Button,
+  Interpolator
+} from './components/combined.js'
+
 
 export {
   Document,
@@ -28,4 +33,6 @@ export {
   Clip,
 
   ClickRegion,
+  Button,
+  Interpolator,
 }
