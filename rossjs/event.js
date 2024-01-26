@@ -36,7 +36,7 @@ canvas.addEventListener('dblclick', () => {
 
 canvas.addEventListener('mousemove', e => {
   Interaction.x = e.clientX
-  Interaction4.y = e.clientY
+  Interaction.y = e.clientY
 })
 canvas.addEventListener('wheel', e => {
   e.preventDefault()
