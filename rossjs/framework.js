@@ -1,4 +1,7 @@
 import Document from './document.js'
+import { Interaction } from './event.js'
+import LocalStorage from './localstorage.js'
+import * as util from './rossutils.js'
 import {
   Element,
   Rect,
@@ -14,12 +17,16 @@ import {
 import {
   ClickRegion,
   Button,
-  Interpolator
+  Interpolator,
+  Toggle,
+  CheckBox,
 } from './components/combined.js'
-
 
 export {
   Document,
+  Interaction,
+  LocalStorage,
+  util,
 
   Element,
   Rect,
@@ -35,4 +42,6 @@ export {
   ClickRegion,
   Button,
   Interpolator,
+  Toggle,
+  CheckBox,
 }
