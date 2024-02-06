@@ -1,9 +1,13 @@
+import global from './global.js'
+import Color from './color.js'
 import Document from './document.js'
 
 export const Element = class {
   constructor() {
     this.canvas = Document.canvas.canvas
+    global.canvas = this.canvas
     this.ctx = Document.canvas.ctx
+    global.ctx = this.ctx
     this.ctx.globalAlpha = 1
     this.cache = { type: null }
   }
@@ -23,6 +27,9 @@ export const Element = class {
     return this
   }
   fill(fill, alphaReset = true) {
+    if (fill instanceof Color)
+      fill = fill.hex
+
     if (fill != null) {
       this.ctx.fillStyle = fill
 
@@ -39,6 +46,9 @@ export const Element = class {
     return this
   }
   stroke(stroke, lineWidth, alphaReset = true) {
+    if (stroke instanceof Color)
+      stroke = stroke.hex
+
     if (stroke != null) {
       this.ctx.lineWidth = lineWidth
       this.ctx.strokeStyle = stroke
@@ -55,6 +65,11 @@ export const Element = class {
     return this
   }
   both(fill, stroke, lineWidth) {
+    if (fill instanceof Color)
+      fill = fill.hex
+    if (stroke instanceof Color)
+      stroke = stroke.hex
+
     if (this.cache.type) {
       this.cache.run({ fill, stroke, lineWidth, })
     } else {
@@ -71,6 +86,9 @@ export const Element = class {
       let fill = this.ctx.createLinearGradient(x1, y1, x2, y2)
       for (let [i, stop] of gradient.entries()) {
         if (stop.pos < 0 || stop.pos > 1) throw Error('Invalid colorstop position.')
+        if (stop.color instanceof Color)
+          stop.color = stop.color.hex
+        
         fill.addColorStop(stop.pos, stop.color)
       }
 
@@ -85,6 +103,9 @@ export const Element = class {
       let fill = this.ctx.createRadialGradient(x1, y1, r1, x2, y2, r2)
       for (let [i, stop] of gradient.entries()) {
         if (stop.pos < 0 || stop.pos > 1) throw Error('Invalid colorstop position.')
+        if (stop.color instanceof Color)
+          stop.color = stop.color.hex
+
         fill.addColorStop(stop.pos, stop.color)
       }
 
@@ -99,6 +120,9 @@ export const Element = class {
       let stroke = this.ctx.createLinearGradient(x1, y1, x2, y2)
       for (let [i, stop] of gradient.entries()) {
         if (stop.pos < 0 || stop.pos > 1) throw Error('Invalid colorstop position.')
+        if (stop.color instanceof Color)
+          stop.color = stop.color.hex
+
         stroke.addColorStop(stop.pos, stop.color)
       }
 
@@ -114,6 +138,9 @@ export const Element = class {
       let stroke = this.ctx.createRadialGradient(x1, y1, r1, x2, y2, r2)
       for (let [i, stop] of gradient.entries()) {
         if (stop.pos < 0 || stop.pos > 1) throw Error('Invalid colorstop position.')
+        if (stop.color instanceof Color)
+          stop.color = stop.color.hex
+
         stroke.addColorStop(stop.pos, stop.color)
       }
 
@@ -125,7 +152,7 @@ export const Element = class {
     return this
   }
   measureText(text, size) {
-    this.ctx.font = this.ctx.font.replace(/\b\d+(px)\b/, `${size}px`)
+    this.ctx.font = `${global.font.style} ${size}px ${global.font.family}`
     return this.ctx.measureText(text)
   }
 }
@@ -243,7 +270,7 @@ export const Circle = class extends Element {
 }
 
 export const Text = class extends Element {
-  static draw({ x = 0, y = 0, size = 0, text = '', align = 'center', style = '', family = '' }) {
+  static draw({ x = 0, y = 0, size = 0, text = '', align = 'center', style = global.font.style, family = global.font.family }) {
     return new Text(x, y, size, text, align, style, family)
   }
   constructor(x, y, size, text, align, style, family) {
@@ -261,6 +288,7 @@ export const Text = class extends Element {
   }
   draw() {
     this.ctx.font = `${this.style} ${this.size}px ${this.family}`
+    global.font.size = this.size
     this.ctx.lineCap = 'round'
     this.ctx.lineJoin = 'round'
     this.ctx.textAlign = this.align
@@ -344,7 +372,7 @@ export const Clip = class extends Element {
   }
   clip() {
     if (this.type === 'circle') {
-      this.ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2)
+      this.ctx.arc(this.x + this.radius, this.y + this.radius, this.radius, 0, Math.PI * 2)
     } else {
       this.ctx.rect(this.x, this.y, this.width, this.height)
     }
