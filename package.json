@@ -1,0 +1,25 @@
+{
+  "name": "rossjs",
+  "version": "1.0.0",
+  "description": "RossJS is a framework that makes working with Canvas2DRendering quick and easy.",
+  "main": "./rossjs/framework.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lunacles/ross.git"
+  },
+  "keywords": [
+    "canvas2d",
+    "canvas2drendering",
+    "javascriptcanvas",
+    "canvas"
+  ],
+  "author": "damocles",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lunacles/ross/issues"
+  },
+  "homepage": "https://github.com/lunacles/ross#readme"
+}
