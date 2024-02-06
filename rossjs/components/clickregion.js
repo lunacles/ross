@@ -1,4 +1,4 @@
-import { Interaction } from '../event.js'
+import Interaction from '../interaction.js'
 
 import {
   Rect
@@ -31,7 +31,7 @@ const ClickRegion = class {
   }
   check() {
     if (!this.active) return false
-    return Interaction.x >= this.x && Interaction.x < this.x + this.width && Interaction.y >= this.y && Interaction.y < this.y + this.height
+    return Interaction.mouse.x >= this.x && Interaction.mouse.x < this.x + this.width && Interaction.mouse.y >= this.y && Interaction.mouse.y < this.y + this.height
   }
   toggle(state) {
     this.active = state

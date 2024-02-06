@@ -4,7 +4,7 @@ import {
 
 import ClickRegion from './clickregion.js'
 
-import { Interaction } from '../event.js'
+import Interaction from '../interaction.js'
 
 const Button = class extends Element {
   static create({ defaultState = false, onUpdate = () => {} } = {}) {
@@ -34,7 +34,7 @@ const Button = class extends Element {
       width: this.width, height: this.height,
     })
 
-    if (this.clickRegion.check() && Interaction.left) {
+    if (this.clickRegion.check() && Interaction.mouse.left) {
       this.state = !this.state
       this.onUpdate(this.state)
     }

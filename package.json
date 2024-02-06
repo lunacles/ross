@@ -1,6 +1,6 @@
 {
   "name": "rossjs",
-  "version": "1.0.0",
+  "version": "0.1.1",
   "description": "RossJS is a framework that makes working with Canvas2DRendering quick and easy.",
   "main": "./rossjs/framework.js",
   "scripts": {

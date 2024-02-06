@@ -1,5 +1,5 @@
 import Canvas from './canvas.js'
-import { Interaction } from './event.js'
+import Interaction from './interaction.js'
 
 const Document = {
   get width() {
@@ -25,17 +25,28 @@ const Document = {
     canvas.style.cursor = 'default'
     return new Canvas(canvas)
   })(),
+  holdTime: 0,
   refreshCanvas(timeDelta) {
     Document.canvas.setSize({ width: window.innerWidth, height: window.innerHeight, scale: window.devicePixelRatio })
     Document.canvas.setViewport({ x: 0, y: 0, width: Document.canvas.width, height: Document.canvas.height })
 
-    let smoothFix = Interaction.held ? 1 : 0.075 * (timeDelta / 16.67)
-    Interaction.scroll += (Interaction.targetScroll - Interaction.scroll) * smoothFix
-    Interaction.targetScroll -= Interaction.targetScroll * smoothFix
+    if (Interaction.mouse.leftHeld && !Interaction.mouse.moving) {
+      Document.holdTime++
+      if (Document.holdTime > 30) {
+        Interaction.mouse.scroll = 0
+        Interaction.mouse.targetScroll = 0
+      }
+    } else {
+      Document.holdTime = 0
+    }
 
-    Interaction.left = false
-    Interaction.right = false
-    Interaction.doubleClick = false
+    if (Document.holdTime <= 30) {
+      let smoothFix = Interaction.mouse.leftHeld ? 1 : 0.075 * (timeDelta / 16.67)
+      Interaction.mouse.scroll += (Interaction.mouse.targetScroll - Interaction.mouse.scroll) * smoothFix
+      Interaction.mouse.targetScroll -= Interaction.mouse.targetScroll * smoothFix
+    }
+
+    Interaction.reset()
   },
 }
 

@@ -1,6 +1,7 @@
 import Document from './document.js'
-import { Interaction } from './event.js'
 import LocalStorage from './localstorage.js'
+import Color from './color.js'
+import Interaction from './interaction.js'
 import * as util from './rossutils.js'
 import {
   Element,
@@ -26,6 +27,7 @@ export {
   Document,
   Interaction,
   LocalStorage,
+  Color,
   util,
 
   Element,

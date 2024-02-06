@@ -1,13 +1,10 @@
-import global from './global.js'
 import Color from './color.js'
 import Document from './document.js'
 
 export const Element = class {
   constructor() {
     this.canvas = Document.canvas.canvas
-    global.canvas = this.canvas
     this.ctx = Document.canvas.ctx
-    global.ctx = this.ctx
     this.ctx.globalAlpha = 1
     this.cache = { type: null }
   }
@@ -152,7 +149,7 @@ export const Element = class {
     return this
   }
   measureText(text, size) {
-    this.ctx.font = `${global.font.style} ${size}px ${global.font.family}`
+    this.ctx.font = this.ctx.font.replace(/\b\d+(px)\b/, `${size}px`)
     return this.ctx.measureText(text)
   }
 }
